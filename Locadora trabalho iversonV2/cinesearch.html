@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineSearch - Sua Locadora Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            color: #1a2a6c;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #2a3a9c;
+        }
+
+        .btn-danger {
+            background: #b21f1f;
+        }
+
+        .btn-danger:hover {
+            background: #c22f2f;
+        }
+
+        .btn-warning {
+            background: #fdbb2d;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #fdcb4d;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .filter-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestions h3 {
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            background: #e9ecef;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chip:hover {
+            background: #1a2a6c;
+            color: white;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-options button {
+            padding: 8px 12px;
+            background: #e9ecef;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .view-options button.active {
+            background: #1a2a6c;
+            color: white;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-card-content {
+            padding: 15px;
+        }
+
+        .movie-card h3 {
+            margin-bottom: 5px;
+            color: #1a2a6c;
+            font-size: 1.1rem;
+        }
+
+        .movie-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .movie-card .movie-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .list-view .movie-card {
+            display: flex;
+            height: auto;
+        }
+
+        .list-view .movie-card img {
+            width: 120px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+
+        .list-view .movie-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .movie-details {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .movie-poster {
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-info h2 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .price {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #b21f1f;
+            font-size: 1.2rem;
+        }
+
+        .movie-synopsis {
+            margin-bottom: 30px;
+        }
+
+        .movie-synopsis h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .movie-synopsis p {
+            line-height: 1.6;
+            color: #444;
+            font-size: 1.1rem;
+        }
+
+        .streaming-info h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .platform {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .platform.netflix {
+            background: #e50914;
+            border-color: #b80710;
+        }
+
+        .platform.prime {
+            background: #00a8e1;
+            border-color: #0086b9;
+        }
+
+        .platform.hbo {
+            background: #7713b7;
+            border-color: #5d0f91;
+        }
+
+        .platform.disney {
+            background: #113ccf;
+            border-color: #0d2da3;
+        }
+
+        .platform a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .platform a:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .admin-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .admin-form h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .admin-controls {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .admin-controls h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .movie-list-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .admin-movie-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .admin-movie-info {
+            flex: 1;
+        }
+
+        .admin-movie-info h4 {
+            color: #1a2a6c;
+            margin-bottom: 5px;
+        }
+
+        .admin-movie-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .movie-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .movie-poster {
+                width: 100%;
+                max-width: 300px;
+                align-self: center;
+            }
+            
+            .movie-meta {
+                justify-content: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .filter-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .list-view .movie-card {
+                flex-direction: column;
+            }
+            
+            .list-view .movie-card img {
+                width: 100%;
+                height: 200px;
+            }
+
+            .admin-movie-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .admin-movie-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-film"></i> CineSearch</h1>
+            <div class="user-info">
+                <span id="user-name">Convidado</span>
+                <button id="admin-btn" class="btn">Área Admin</button>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="movie-search" class="search-input" placeholder="Digite o nome de um filme, diretor ou gênero...">
+                <button id="search-btn" class="btn search-btn"><i class="fas fa-search"></i></button>
+                <button id="filter-toggle" class="btn"><i class="fas fa-filter"></i> Filtros</button>
+            </div>
+            
+            <div id="filter-panel" class="filter-panel hidden">
+                <div class="filter-group">
+                    <label for="genre-filter">Gênero:</label>
+                    <select id="genre-filter">
+                        <option value="">Todos os gêneros</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year-filter">Ano:</label>
+                    <select id="year-filter">
+                        <option value="">Todos os anos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="director-filter">Diretor:</label>
+                    <select id="director-filter">
+                        <option value="">Todos os diretores</option>
+                    </select>
+                </div>
+                <button id="apply-filters" class="btn">Aplicar Filtros</button>
+                <button id="clear-filters" class="btn btn-warning">Limpar Filtros</button>
+            </div>
+            
+            <div class="suggestions">
+                <h3>Filmes em Destaque:</h3>
+                <div class="suggestion-chips">
+                    <span class="chip" data-movie="O Poderoso Chefão">O Poderoso Chefão</span>
+                    <span class="chip" data-movie="Matrix">Matrix</span>
+                    <span class="chip" data-movie="Interestelar">Interestelar</span>
+                    <span class="chip" data-movie="Pulp Fiction">Pulp Fiction</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <span id="results-count">0 filmes encontrados</span>
+                <div class="view-options">
+                    <button id="grid-view" class="active"><i class="fas fa-th"></i></button>
+                    <button id="list-view"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+            
+            <div id="movie-list" class="movie-grid"></div>
+            
+            <div id="movie-details" class="movie-details hidden">
+                <button id="back-to-list" class="btn"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <div class="movie-header">
+                    <img id="movie-poster" class="movie-poster" src="" alt="Poster do filme">
+                    <div class="movie-info">
+                        <h2 id="movie-title"></h2>
+                        <div class="movie-meta">
+                            <span id="movie-year"></span>
+                            <span id="movie-duration"></span>
+                            <span id="movie-rating"></span>
+                        </div>
+                        <p id="movie-director"></p>
+                        <p id="movie-genre"></p>
+                        <p class="price">Preço do aluguel: <span id="movie-price"></span></p>
+                    </div>
+                </div>
+                <div class="movie-synopsis">
+                    <h3>Sinopse</h3>
+                    <p id="movie-synopsis"></p>
+                </div>
+                <div class="streaming-info">
+                    <h3>Onde assistir</h3>
+                    <div id="streaming-platforms"></div>
+                </div>
+            </div>
+
+            <div id="no-results" class="no-results hidden">
+                <i class="fas fa-film"></i>
+                <h3>Nenhum filme encontrado</h3>
+                <p>Tente buscar por outro título ou ajustar os filtros.</p>
+            </div>
+        </div>
+
+        <div id="admin-panel" class="admin-form hidden">
+            <h2>Área Administrativa</h2>
+            
+            <h3>Adicionar Novo Filme</h3>
+            <form id="add-movie-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="titulo">Título do Filme</label>
+                        <input type="text" id="titulo" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ano_lancamento">Ano de Lançamento</label>
+                        <input type="number" id="ano_lancamento" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="diretor">Diretor</label>
+                        <input type="text" id="diretor" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="genero">Gênero</label>
+                        <input type="text" id="genero" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="sinopse">Sinopse</label>
+                    <textarea id="sinopse" rows="4" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="duracao">Duração (minutos)</label>
+                        <input type="number" id="duracao" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="classificacao">Classificação Indicativa</label>
+                        <input type="text" id="classificacao" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="capa_url">URL da Capa</label>
+                        <input type="url" id="capa_url" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="valor_aluguel">Preço do Aluguel (R$)</label>
+                        <input type="number" id="valor_aluguel" step="0.01" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Adicionar Filme</button>
+            </form>
+
+            <div class="admin-controls">
+                <h3>Gerenciar Filmes Existentes</h3>
+                <div id="admin-movies-list" class="movie-list-admin">
+                    <!-- Lista de filmes para administração será inserida aqui -->
+                </div>
+            </div>
+
+            <div class="message" id="admin-message"></div>
+            <button id="close-admin" class="btn btn-danger" style="margin-top: 20px;">Fechar Área Admin</button>
+        </div>
+    </div>
+
+    <script>
+        // Dados iniciais dos filmes (substituiriam o banco de dados)
+        const initialMovies = [
+            {
+                id: 1,
+                titulo: "O Poderoso Chefão",
+                ano_lancamento: 1972,
+                diretor: "Francis Ford Coppola",
+                genero: "Drama",
+                sinopse: "A saga da família Corleone, liderada por Don Vito Corleone.",
+                duracao: 175,
+                classificacao: "18+",
+                capa_url: "https://br.web.img3.acsta.net/c_310_420/medias/nmedia/18/90/93/20/20120876.jpg",
+                valor_aluguel: 9.99,
+                streamingInfo: [
+                    { plataforma: "Netflix", link: "https://www.netflix.com/title/60011152", classe: "netflix" },
+                    { plataforma: "Amazon Prime Video", link: "https://www.primevideo.com/detail/0L3VZQ5JZ5JZ5JZ5JZ5JZ5JZ5J", classe: "prime" }
+                ]
+            },
+            {
+                id: 2,
+                titulo: "Matrix",
+                ano_lancamento: 1999,
+                diretor: "Lana e Lilly Wachowski",
+                genero: "Ficção Científica",
+                sinopse: "Um hacker descobre a verdade sobre sua realidade.",
+                duracao: 136,
+                classificacao: "14+",
+                capa_url: "https://br.web.img2.acsta.net/c_310_420/medias/nmedia/18/91/08/82/20123856.jpg",
+                valor_aluguel: 7.99,
+                streamingInfo: [
+                    { plataforma: "HBO Max", link: "https://www.hbomax.com/br/pt/feature/urn:hbo:feature:GXdbR4gLrlEvJwwEAAAAD", classe: "hbo" }
+                ]
+            },
+            {
+                id: 3,
+                titulo: "Interestelar",
+                ano_lancamento: 2014,
+                diretor: "Christopher Nolan",
+                genero: "Ficção Científica",
+                sinopse: "Exploradores espaciais em busca de um novo lar para a humanidade.",
+                duracao: 169,
+                classificacao: "10+",
+                capa_url: "https://br.web.img2.acsta.net/c_310_420/pictures/14/10/31/20/39/476171.jpg",
+                valor_aluguel: 8.99,
+                streamingInfo: [
+                    { plataforma: "Netflix", link: "https://www.netflix.com/title/70305903", classe: "netflix" }
+                ]
+            },
+            {
+                id: 4,
+                titulo: "Pulp Fiction",
+                ano_lancamento: 1994,
+                diretor: "Quentin Tarantino",
+                genero: "Drama/Crime",
+                sinopse: "Várias histórias de criminosos de Los Angeles se entrelaçam.",
+                duracao: 154,
+                classificacao: "18+",
+                capa_url: "https://br.web.img2.acsta.net/c_310_420/medias/nmedia/18/90/95/20/20120827.jpg",
+                valor_aluguel: 6.99,
+                streamingInfo: [
+                    { plataforma: "Netflix", link: "https://www.netflix.com/title/60011152", classe: "netflix" },
+                    { plataforma: "Amazon Prime Video", link: "https://www.primevideo.com/detail/0L3VZQ5JZ5JZ5JZ5JZ5JZ5JZ5J", classe: "prime" },
+                    { plataforma: "Disney+", link: "https://www.disneyplus.com", classe: "disney" }
+                ]
+            }
+        ];
+
+        // Elementos da DOM
+        const movieSearch = document.getElementById('movie-search');
+        const searchBtn = document.getElementById('search-btn');
+        const filterToggle = document.getElementById('filter-toggle');
+        const filterPanel = document.getElementById('filter-panel');
+        const genreFilter = document.getElementById('genre-filter');
+        const yearFilter = document.getElementById('year-filter');
+        const directorFilter = document.getElementById('director-filter');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const clearFiltersBtn = document.getElementById('clear-filters');
+        const suggestionChips = document.querySelectorAll('.chip');
+        const movieList = document.getElementById('movie-list');
+        const movieDetails = document.getElementById('movie-details');
+        const noResults = document.getElementById('no-results');
+        const backToListBtn = document.getElementById('back-to-list');
+        const resultsCount = document.getElementById('results-count');
+        const gridViewBtn = document.getElementById('grid-view');
+        const listViewBtn = document.getElementById('list-view');
+        const adminBtn = document.getElementById('admin-btn');
+        const adminPanel = document.getElementById('admin-panel');
+        const addMovieForm = document.getElementById('add-movie-form');
+        const adminMessage = document.getElementById('admin-message');
+        const closeAdminBtn = document.getElementById('close-admin');
+        const adminMoviesList = document.getElementById('admin-movies-list');
+
+        // Variáveis globais
+        let currentView = 'grid';
+        let currentFilters = {
+            search: '',
+            genero: '',
+            ano: '',
+            diretor: ''
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        function initApp() {
+            // Carregar filmes do localStorage ou usar os iniciais
+            let movies = JSON.parse(localStorage.getItem('movies')) || initialMovies;
+            localStorage.setItem('movies', JSON.stringify(movies));
+            
+            // Carregar filtros
+            loadFilters(movies);
+            
+            // Exibir filmes
+            displayMovies(movies);
+            
+            // Configurar event listeners
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            searchBtn.addEventListener('click', searchMovie);
+            filterToggle.addEventListener('click', toggleFilters);
+            applyFiltersBtn.addEventListener('click', applyFilters);
+            clearFiltersBtn.addEventListener('click', clearFilters);
+            movieSearch.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchMovie();
+            });
+
+            suggestionChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    movieSearch.value = chip.getAttribute('data-movie');
+                    searchMovie();
+                });
+            });
+
+            backToListBtn.addEventListener('click', () => {
+                movieDetails.classList.add('hidden');
+                movieList.classList.remove('hidden');
+                noResults.classList.add('hidden');
+            });
+
+            gridViewBtn.addEventListener('click', () => switchView('grid'));
+            listViewBtn.addEventListener('click', () => switchView('list'));
+            
+            adminBtn.addEventListener('click', toggleAdminPanel);
+            addMovieForm.addEventListener('submit', handleAddMovie);
+            closeAdminBtn.addEventListener('click', toggleAdminPanel);
+        }
+
+        function loadFilters(movies) {
+            // Limpar filtros existentes
+            genreFilter.innerHTML = '<option value="">Todos os gêneros</option>';
+            yearFilter.innerHTML = '<option value="">Todos os anos</option>';
+            directorFilter.innerHTML = '<option value="">Todos os diretores</option>';
+            
+            // Extrair gêneros únicos
+            const generos = [...new Set(movies.map(movie => movie.genero))];
+            generos.forEach(genero => {
+                const option = document.createElement('option');
+                option.value = genero;
+                option.textContent = genero;
+                genreFilter.appendChild(option);
+            });
+            
+            // Extrair anos únicos
+            const anos = [...new Set(movies.map(movie => movie.ano_lancamento))].sort((a, b) => b - a);
+            anos.forEach(ano => {
+                const option = document.createElement('option');
+                option.value = ano;
+                option.textContent = ano;
+                yearFilter.appendChild(option);
+            });
+            
+            // Extrair diretores únicos
+            const diretores = [...new Set(movies.map(movie => movie.diretor))];
+            diretores.forEach(diretor => {
+                const option = document.createElement('option');
+                option.value = diretor;
+                option.textContent = diretor;
+                directorFilter.appendChild(option);
+            });
+        }
+
+        function searchMovie() {
+            currentFilters.search = movieSearch.value;
+            filterMovies();
+        }
+
+        function toggleFilters() {
+            filterPanel.classList.toggle('hidden');
+        }
+
+        function applyFilters() {
+            currentFilters.genero = genreFilter.value;
+            currentFilters.ano = yearFilter.value;
+            currentFilters.diretor = directorFilter.value;
+            filterMovies();
+        }
+
+        function clearFilters() {
+            genreFilter.value = '';
+            yearFilter.value = '';
+            directorFilter.value = '';
+            movieSearch.value = '';
+            currentFilters = {
+                search: '',
+                genero: '',
+                ano: '',
+                diretor: ''
+            };
+            filterMovies();
+        }
+
+        function filterMovies() {
+            const movies = JSON.parse(localStorage.getItem('movies')) || [];
+            
+            const filteredMovies = movies.filter(movie => {
+                // Filtro de busca
+                if (currentFilters.search && 
+                    !movie.titulo.toLowerCase().includes(currentFilters.search.toLowerCase()) &&
+                    !movie.diretor.toLowerCase().includes(currentFilters.search.toLowerCase()) &&
+                    !movie.genero.toLowerCase().includes(currentFilters.search.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de gênero
+                if (currentFilters.genero && movie.genero !== currentFilters.genero) {
+                    return false;
+                }
+                
+                // Filtro de ano
+                if (currentFilters.ano && movie.ano_lancamento != currentFilters.ano) {
+                    return false;
+                }
+                
+                // Filtro de diretor
+                if (currentFilters.diretor && movie.diretor !== currentFilters.diretor) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            displayMovies(filteredMovies);
+        }
+
+        function displayMovies(movies) {
+            if (movies.length === 0) {
+                movieList.classList.add('hidden');
+                movieDetails.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                resultsCount.textContent = '0 filmes encontrados';
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            movieList.classList.remove('hidden');
+            movieDetails.classList.add('hidden');
+            
+            resultsCount.textContent = `${movies.length} ${movies.length === 1 ? 'filme encontrado' : 'filmes encontrados'}`;
+            
+            movieList.innerHTML = '';
+            movieList.className = currentView === 'grid' ? 'movie-grid' : 'movie-list';
+            
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <img src="${movie.capa_url}" alt="${movie.titulo}" onerror="this.src='https://via.placeholder.com/200x300/cccccc/666666?text=Imagem+Não+Disponível'">
+                    <div class="movie-card-content">
+                        <h3>${movie.titulo}</h3>
+                        <p>${movie.diretor}</p>
+                        <div class="movie-meta">
+                            <span>${movie.ano_lancamento}</span>
+                            <span>${movie.duracao} min</span>
+                        </div>
+                        <p class="price">R$ ${movie.valor_aluguel.toFixed(2)}</p>
+                    </div>
+                `;
+                
+                movieCard.addEventListener('click', () => showMovieDetails(movie));
+                movieList.appendChild(movieCard);
+            });
+        }
+
+        function showMovieDetails(movie) {
+            movieList.classList.add('hidden');
+            movieDetails.classList.remove('hidden');
+            
+            document.getElementById('movie-title').textContent = movie.titulo;
+            document.getElementById('movie-year').textContent = movie.ano_lancamento;
+            document.getElementById('movie-duration').textContent = `${movie.duracao} min`;
+            document.getElementById('movie-rating').textContent = movie.classificacao;
+            document.getElementById('movie-director').textContent = `Diretor: ${movie.diretor}`;
+            document.getElementById('movie-genre').textContent = `Gênero: ${movie.genero}`;
+            document.getElementById('movie-price').textContent = `R$ ${movie.valor_aluguel.toFixed(2)}`;
+            document.getElementById('movie-synopsis').textContent = movie.sinopse;
+            
+            const posterImg = document.getElementById('movie-poster');
+            posterImg.src = movie.capa_url;
+            posterImg.alt = movie.titulo;
+            posterImg.onerror = function() {
+                this.src = 'https://via.placeholder.com/300x450/cccccc/666666?text=Imagem+Não+Disponível';
+            };
+            
+            const streamingPlatforms = document.getElementById('streaming-platforms');
+            streamingPlatforms.innerHTML = '';
+            
+            if (movie.streamingInfo && movie.streamingInfo.length > 0) {
+                movie.streamingInfo.forEach(platform => {
+                    const platformEl = document.createElement('a');
+                    platformEl.className = `platform ${platform.classe || ''}`;
+                    platformEl.href = platform.link;
+                    platformEl.target = '_blank';
+                    platformEl.innerHTML = `${platform.plataforma}`;
+                    streamingPlatforms.appendChild(platformEl);
+                });
+            } else {
+                streamingPlatforms.innerHTML = '<p>Nenhuma plataforma de streaming disponível no momento.</p>';
+            }
+        }
+
+        function switchView(viewType) {
+            currentView = viewType;
+            
+            if (viewType === 'grid') {
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+                movieList.className = 'movie-grid';
+            } else {
+                gridViewBtn.classList.remove('active');
+                listViewBtn.classList.add('active');
+                movieList.className = 'movie-list';
+                
+                // Aplicar estilo específico para visualização em lista
+                document.querySelectorAll('.movie-card').forEach(card => {
+                    card.classList.add('list-view');
+                });
+            }
+        }
+
+        function toggleAdminPanel() {
+            adminPanel.classList.toggle('hidden');
+            
+            // Se o painel admin está sendo exibido, carregar a lista de filmes para gerenciamento
+            if (!adminPanel.classList.contains('hidden')) {
+                loadAdminMoviesList();
+            }
+        }
+
+        function loadAdminMoviesList() {
+            const movies = JSON.parse(localStorage.getItem('movies')) || [];
+            adminMoviesList.innerHTML = '';
+            
+            if (movies.length === 0) {
+                adminMoviesList.innerHTML = '<p>Nenhum filme cadastrado.</p>';
+                return;
+            }
+            
+            movies.forEach(movie => {
+                const movieItem = document.createElement('div');
+                movieItem.className = 'admin-movie-item';
+                movieItem.innerHTML = `
+                    <div class="admin-movie-info">
+                        <h4>${movie.titulo} (${movie.ano_lancamento})</h4>
+                        <p>${movie.diretor} - ${movie.genero}</p>
+                    </div>
+                    <div class="admin-movie-actions">
+                        <button class="btn btn-danger delete-movie" data-id="${movie.id}">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                
+                adminMoviesList.appendChild(movieItem);
+            });
+            
+            // Adicionar event listeners para os botões de exclusão
+            document.querySelectorAll('.delete-movie').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const movieId = parseInt(e.target.closest('.delete-movie').dataset.id);
+                    deleteMovie(movieId);
+                });
+            });
+        }
+
+        function deleteMovie(movieId) {
+            if (!confirm('Tem certeza que deseja excluir este filme?')) {
+                return;
+            }
+            
+            let movies = JSON.parse(localStorage.getItem('movies')) || [];
+            movies = movies.filter(movie => movie.id !== movieId);
+            localStorage.setItem('movies', JSON.stringify(movies));
+            
+            // Recarregar a lista de administração
+            loadAdminMoviesList();
+            
+            // Atualizar a exibição principal de filmes
+            loadFilters(movies);
+            filterMovies();
+            
+            showAdminMessage('Filme excluído com sucesso!', 'success');
+        }
+
+        function handleAddMovie(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('titulo').value;
+            const ano_lancamento = document.getElementById('ano_lancamento').value;
+            const diretor = document.getElementById('diretor').value;
+            const genero = document.getElementById('genero').value;
+            const sinopse = document.getElementById('sinopse').value;
+            const duracao = document.getElementById('duracao').value;
+            const classificacao = document.getElementById('classificacao').value;
+            const capa_url = document.getElementById('capa_url').value;
+            const valor_aluguel = document.getElementById('valor_aluguel').value;
+            
+            // Validação básica
+            if (!titulo || !ano_lancamento || !diretor || !genero || !sinopse || !duracao || !classificacao || !capa_url || !valor_aluguel) {
+                showAdminMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            // Criar novo filme
+            const newMovie = {
+                id: Date.now(), // ID único baseado no timestamp
+                titulo,
+                ano_lancamento: parseInt(ano_lancamento),
+                diretor,
+                genero,
+                sinopse,
+                duracao: parseInt(duracao),
+                classificacao,
+                capa_url,
+                valor_aluguel: parseFloat(valor_aluguel),
+                streamingInfo: []
+            };
+            
+            // Adicionar à lista de filmes
+            const movies = JSON.parse(localStorage.getItem('movies')) || [];
+            movies.push(newMovie);
+            localStorage.setItem('movies', JSON.stringify(movies));
+            
+            // Recarregar filtros e exibir filmes
+            loadFilters(movies);
+            displayMovies(movies);
+            
+            // Feedback e limpar formulário
+            showAdminMessage('Filme adicionado com sucesso!', 'success');
+            addMovieForm.reset();
+            
+            // Atualizar lista de administração
+            loadAdminMoviesList();
+        }
+
+        function showAdminMessage(text, type) {
+            adminMessage.textContent = text;
+            adminMessage.className = `message ${type}`;
+            
+            // Esconder a mensagem após 5 segundos
+            setTimeout(() => {
+                adminMessage.textContent = '';
+                adminMessage.className = 'message';
+            }, 5000);
+        }
+
+        // Adicionar Font Awesome para ícones
+        document.head.innerHTML += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">';
+    </script>
+</body>
+</html>

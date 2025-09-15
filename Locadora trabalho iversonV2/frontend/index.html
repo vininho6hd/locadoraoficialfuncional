@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineSearch - Sua Locadora Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-container" class="container active">
+        <div class="login-form">
+            <h1><i class="fas fa-film"></i> CineSearch</h1>
+            <p>Sua locadora digital de filmes</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="E-mail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Senha" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+            <p class="register-link">Não tem uma conta? <a href="#" id="show-register">Registre-se</a></p>
+            <p class="guest-link">Ou <a href="#" id="show-guest">acesse como convidado</a></p>
+            <p class="admin-link"><a href="admin.html">Área administrativa</a></p>
+        </div>
+    </div>
+
+    <!-- Tela de Registro -->
+    <div id="register-container" class="container">
+        <div class="login-form">
+            <h1><i class="fas fa-film"></i> Crie sua conta</h1>
+            <form id="register-form">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Nome completo" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="new-email" placeholder="E-mail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="new-password" placeholder="Senha" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit">Registrar</button>
+            </form>
+            <p class="register-link">Já tem uma conta? <a href="#" id="show-login">Faça login</a></p>
+            <p class="guest-link">Ou <a href="#" id="show-guest-from-register">acesse como convidado</a></p>
+        </div>
+    </div>
+
+    <!-- Tela Principal -->
+    <div id="main-container" class="container">
+        <header>
+            <h1><i class="fas fa-film"></i> CineSearch</h1>
+            <div class="user-info">
+                <span id="user-name">Usuário</span>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="movie-search" placeholder="Digite o nome de um filme, diretor ou gênero...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+                <button id="filter-toggle"><i class="fas fa-filter"></i></button>
+            </div>
+            
+            <div id="filter-panel" class="filter-panel hidden">
+                <div class="filter-group">
+                    <label for="genre-filter">Gênero:</label>
+                    <select id="genre-filter">
+                        <option value="">Todos os gêneros</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year-filter">Ano:</label>
+                    <select id="year-filter">
+                        <option value="">Todos os anos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="director-filter">Diretor:</label>
+                    <select id="director-filter">
+                        <option value="">Todos os diretores</option>
+                    </select>
+                </div>
+                <button id="apply-filters">Aplicar Filtros</button>
+                <button id="clear-filters">Limpar Filtros</button>
+            </div>
+            
+            <div class="suggestions">
+                <h3>Filmes em Destaque:</h3>
+                <div class="suggestion-chips">
+                    <span class="chip" data-movie="O Poderoso Chefão">O Poderoso Chefão</span>
+                    <span class="chip" data-movie="Matrix">Matrix</span>
+                    <span class="chip" data-movie="Interestelar">Interestelar</span>
+                    <span class="chip" data-movie="Pulp Fiction">Pulp Fiction</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div id="results-info">
+                <span id="results-count">0 filmes encontrados</span>
+                <div class="view-options">
+                    <button id="grid-view" class="active"><i class="fas fa-th"></i></button>
+                    <button id="list-view"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+            
+            <div id="movie-list" class="movie-grid"></div>
+            
+            <div id="movie-details" class="hidden">
+                <button id="back-to-list" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <div class="movie-header">
+                    <img id="movie-poster" src="" alt="Poster do filme">
+                    <div class="movie-info">
+                        <h2 id="movie-title"></h2>
+                        <div class="movie-meta">
+                            <span id="movie-year"></span>
+                            <span id="movie-duration"></span>
+                            <span id="movie-rating"></span>
+                        </div>
+                        <p id="movie-director"></p>
+                        <p id="movie-genre"></p>
+                        <p class="price">Preço do aluguel: <span id="movie-price"></span></p>
+                    </div>
+                </div>
+                <div class="movie-synopsis">
+                    <h3>Sinopse</h3>
+                    <p id="movie-synopsis"></p>
+                </div>
+                <div class="streaming-info">
+                    <h3>Onde assistir</h3>
+                    <div id="streaming-platforms"></div>
+                </div>
+            </div>
+
+            <div id="no-results" class="hidden">
+                <i class="fas fa-film fa-5x"></i>
+                <h3>Nenhum filme encontrado</h3>
+                <p>Tente buscar por outro título ou ajustar os filtros.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
