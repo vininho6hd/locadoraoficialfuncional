@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineSearch - Sua Locadora Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos adicionais do CineSearch */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .movie-list-view .movie-card {
+            display: flex;
+            height: auto;
+        }
+
+        .movie-list-view .movie-card img {
+            width: 120px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+
+        .movie-list-view .movie-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-card-content {
+            padding: 15px;
+        }
+
+        .movie-card h3 {
+            margin-bottom: 5px;
+            color: #1a2a6c;
+            font-size: 1.1rem;
+        }
+
+        .movie-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .movie-card .movie-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .movie-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        #movie-poster {
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-info h2 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .price {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #b21f1f;
+            font-size: 1.2rem;
+        }
+
+        .movie-synopsis {
+            margin-bottom: 30px;
+        }
+
+        .movie-synopsis h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .movie-synopsis p {
+            line-height: 1.6;
+            color: #444;
+            font-size: 1.1rem;
+        }
+
+        .streaming-info h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .platform {
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .platform.available {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .platform a {
+            color: #1a2a6c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .platform a:hover {
+            text-decoration: underline;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            background: #e9ecef;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chip:hover {
+            background: #1a2a6c;
+            color: white;
+        }
+
+        .filter-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-options button {
+            padding: 8px 12px;
+            background: #e9ecef;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .view-options button.active {
+            background: #1a2a6c;
+            color: white;
+        }
+
+        /* Estilos para a área administrativa integrada */
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .admin-movie-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-movie-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .admin-movie-card-content {
+            padding: 15px;
+        }
+
+        .admin-movie-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-edit {
+            background: #fdbb2d;
+            color: #333;
+        }
+
+        .btn-edit:hover {
+            background: #fdcb4d;
+        }
+
+        .btn-danger {
+            background: #b21f1f;
+        }
+
+        .btn-danger:hover {
+            background: #c22f2f;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .input-group {
+            flex: 1;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .movie-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            #movie-poster {
+                width: 100%;
+                max-width: 300px;
+                align-self: center;
+            }
+            
+            .movie-meta {
+                justify-content: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .filter-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            #results-info {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .movie-list-view .movie-card {
+                flex-direction: column;
+            }
+            
+            .movie-list-view .movie-card img {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-container" class="container active">
+        <div class="login-form">
+            <h1><i class="fas fa-film"></i> CineSearch</h1>
+            <p>Sua locadora digital de filmes</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="E-mail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Senha" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+            <p class="register-link">Não tem uma conta? <a href="#" id="show-register">Registre-se</a></p>
+            <p class="guest-link">Ou <a href="#" id="show-guest">acesse como convidado</a></p>
+            <p class="admin-link"><a href="#" id="show-admin-login">Área administrativa</a></p>
+        </div>
+    </div>
+
+    <!-- Tela de Registro -->
+    <div id="register-container" class="container">
+        <div class="login-form">
+            <h1><i class="fas fa-film"></i> Crie sua conta</h1>
+            <form id="register-form">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Nome completo" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="new-email" placeholder="E-mail" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="new-password" placeholder="Senha" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit">Registrar</button>
+            </form>
+            <p class="register-link">Já tem uma conta? <a href="#" id="show-login">Faça login</a></p>
+            <p class="guest-link">Ou <a href="#" id="show-guest-from-register">acesse como convidado</a></p>
+        </div>
+    </div>
+
+    <!-- Tela Principal -->
+    <div id="main-container" class="container">
+        <header>
+            <h1><i class="fas fa-film"></i> CineSearch</h1>
+            <div class="user-info">
+                <span id="user-name">Usuário</span>
+                <span id="user-type" style="background: #6c757d; color: white; padding: 3px 8px; border-radius: 3px; font-size: 0.8rem;"></span>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="movie-search" placeholder="Digite o nome de um filme, diretor ou gênero...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+                <button id="filter-toggle"><i class="fas fa-filter"></i> Filtros</button>
+            </div>
+            
+            <div id="filter-panel" class="filter-panel hidden">
+                <div class="filter-group">
+                    <label for="genre-filter">Gênero:</label>
+                    <select id="genre-filter">
+                        <option value="">Todos os gêneros</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year-filter">Ano:</label>
+                    <select id="year-filter">
+                        <option value="">Todos os anos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="director-filter">Diretor:</label>
+                    <select id="director-filter">
+                        <option value="">Todos os diretores</option>
+                    </select>
+                </div>
+                <button id="apply-filters" class="btn">Aplicar Filtros</button>
+                <button id="clear-filters" class="btn btn-warning">Limpar Filtros</button>
+            </div>
+            
+            <div class="suggestions">
+                <h3>Filmes em Destaque:</h3>
+                <div class="suggestion-chips">
+                    <span class="chip" data-movie="O Poderoso Chefão">O Poderoso Chefão</span>
+                    <span class="chip" data-movie="Matrix">Matrix</span>
+                    <span class="chip" data-movie="Interestelar">Interestelar</span>
+                    <span class="chip" data-movie="Pulp Fiction">Pulp Fiction</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div id="results-info">
+                <span id="results-count">0 filmes encontrados</span>
+                <div class="view-options">
+                    <button id="grid-view" class="active"><i class="fas fa-th"></i></button>
+                    <button id="list-view"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+            
+            <div id="movie-list" class="movie-grid"></div>
+            
+            <div id="movie-details" class="hidden">
+                <button id="back-to-list" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <div class="movie-header">
+                    <img id="movie-poster" src="" alt="Poster do filme">
+                    <div class="movie-info">
+                        <h2 id="movie-title"></h2>
+                        <div class="movie-meta">
+                            <span id="movie-year"></span>
+                            <span id="movie-duration"></span>
+                            <span id="movie-rating"></span>
+                        </div>
+                        <p id="movie-director"></p>
+                        <p id="movie-genre"></p>
+                        <p class="price">Preço do aluguel: <span id="movie-price"></span></p>
+                    </div>
+                </div>
+                <div class="movie-synopsis">
+                    <h3>Sinopse</h3>
+                    <p id="movie-synopsis"></p>
+                </div>
+                <div class="streaming-info">
+                    <h3>Onde assistir</h3>
+                    <div id="streaming-platforms"></div>
+                </div>
+            </div>
+
+            <div id="no-results" class="hidden">
+                <i class="fas fa-film fa-5x"></i>
+                <h3>Nenhum filme encontrado</h3>
+                <p>Tente buscar por outro título ou ajustar os filtros.</p>
+            </div>
+        </div>
+
+        <!-- Área Administrativa Integrada -->
+        <div id="admin-panel" class="admin-panel hidden">
+            <h2><i class="fas fa-cog"></i> Área Administrativa</h2>
+            
+            <h3>Adicionar Novo Filme</h3>
+            <form id="add-movie-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="titulo">Título do Filme</label>
+                        <input type="text" id="titulo" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ano_lancamento">Ano de Lançamento</label>
+                        <input type="number" id="ano_lancamento" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="diretor">Diretor</label>
+                        <input type="text" id="diretor" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="genero">Gênero</label>
+                        <input type="text" id="genero" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="sinopse">Sinopse</label>
+                    <textarea id="sinopse" rows="4" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="duracao">Duração (minutos)</label>
+                        <input type="number" id="duracao" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="classificacao">Classificação Indicativa</label>
+                        <input type="text" id="classificacao" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="capa_url">URL da Capa</label>
+                        <input type="url" id="capa_url" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="valor_aluguel">Preço do Aluguel (R$)</label>
+                        <input type="number" id="valor_aluguel" step="0.01" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Adicionar Filme</button>
+            </form>
+
+            <div class="admin-controls">
+                <h3>Catálogo de Filmes</h3>
+                <div id="admin-movies-list" class="admin-movies-grid">
+                    <!-- Lista de filmes para administração será inserida aqui -->
+                </div>
+            </div>
+
+            <div class="message" id="admin-message"></div>
+            <button id="close-admin" class="btn btn-danger" style="margin-top: 20px;">Fechar Área Admin</button>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Filme -->
+    <div id="edit-movie-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Filme</h2>
+            <form id="edit-movie-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="edit-titulo">Título do Filme</label>
+                        <input type="text" id="edit-titulo" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-ano_lancamento">Ano de Lançamento</label>
+                        <input type="number" id="edit-ano_lancamento" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="edit-diretor">Diretor</label>
+                        <input type="text" id="edit-diretor" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-genero">Gênero</label>
+                        <input type="text" id="edit-genero" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="edit-sinopse">Sinopse</label>
+                    <textarea id="edit-sinopse" rows="4" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="edit-duracao">Duração (minutos)</label>
+                        <input type="number" id="edit-duracao" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-classificacao">Classificação Indicativa</label>
+                        <input type="text" id="edit-classificacao" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="edit-capa_url">URL da Capa</label>
+                        <input type="url" id="edit-capa_url" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="edit-valor_aluguel">Preço do Aluguel (R$)</label>
+                        <input type="number" id="edit-valor_aluguel" step="0.01" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
